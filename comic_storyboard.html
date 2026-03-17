@@ -292,8 +292,8 @@
 </head>
 <body>
   <header>
-    <h1>Choose-Your-Path Comics</h1>
-    <p class="subtitle">Tap a level. Then tap a choice. See what is right, what is wrong and what comes next.</p>
+    <h1>Learning to Read – Story Levels</h1>
+    <p class="subtitle">Start at Level 1 with very easy words. Turn the page to read harder words.</p>
     <div class="level-picker">
       <button class="level-button active" data-target="level-1">Level 1</button>
       <button class="level-button" data-target="level-2">Level 2</button>
@@ -305,436 +305,152 @@
 
   <main>
     <p class="helper-text">
-      Start with Level 1 if reading is new. Move up levels when the words feel easy.
+      Read the story from Level 1 to Level 5. Each level has the same idea with harder words.
     </p>
 
-    <!-- LEVEL 1 -->
+    <!-- LEVEL 1: very simple, decodable words -->
     <section id="level-1" class="level-section active">
       <h2 class="level-title">
         Level 1
-        <span class="difficulty-tag">Very easy words, big pictures</span>
+        <span class="difficulty-tag">Very easy words</span>
       </h2>
       <div class="badge-row">
-        <span class="badge">Theme: Sharing a toy</span>
-        <span class="badge">One big choice</span>
+        <span class="badge">Short sentences</span>
+        <span class="badge">Simple sight words</span>
       </div>
 
-      <div class="comic">
-        <!-- Panel 1 -->
-        <div class="panel">
-          <span class="panel-tag">Start</span>
-          <div class="scene">Sam and Ben see one red car toy.</div>
-          <p class="bubble"><strong>Sam:</strong> I want the car.</p>
-        </div>
-
-        <!-- Panel 2 - Choice -->
-        <div class="panel">
-          <span class="panel-tag">Big choice</span>
-          <div class="scene">Sam holds the toy. Ben waits.</div>
-          <p class="narration">What should Sam do?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l1-share"
-                    data-result="l1-share-right">
-              ✅ Share the toy
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l1-share"
-                    data-result="l1-share-wrong">
-              🚫 Grab and keep
-            </button>
-          </div>
-          <div id="l1-share-right" class="result right">
-            <strong>Right:</strong> Sam shares. Ben smiles. They both play.
-          </div>
-          <div id="l1-share-wrong" class="result wrong">
-            <strong>Wrong:</strong> Sam grabs. Ben is sad.
-          </div>
-        </div>
-
-        <!-- Panel 3 - What comes next -->
-        <div class="panel">
-          <span class="panel-tag">What comes next</span>
-          <div class="scene">If Sam made a wrong choice, he can fix it.</div>
-          <p class="bubble"><strong>Sam:</strong> I am sorry, Ben.</p>
-          <p class="narration">
-            Sam shares the car. Now Ben is happy. They race the car together.
-          </p>
-        </div>
+      <div class="panel">
+        <span class="panel-tag">Story</span>
+        <p class="narration">
+          I am Sam.
+          I see a dog.
+          The dog is big.
+          I see a red ball.
+          I can get the ball.
+        </p>
       </div>
 
       <div class="words-box">
-        <strong>New words in this level:</strong>
-        <br />
-        share, sad, happy, toy, car
-      </div>
-
-      <div class="nav-bottom">
-        <button onclick="goToLevel('level-2')">Try Level 2</button>
-        <button onclick="resetChoices()">Start this level again</button>
+        <strong>Words in this level:</strong><br />
+        I, am, Sam, see, a, dog, the, is, big, red, ball, can, get
       </div>
     </section>
 
-    <!-- LEVEL 2 -->
+    <!-- LEVEL 2: slightly longer, a few new words -->
     <section id="level-2" class="level-section">
       <h2 class="level-title">
         Level 2
-        <span class="difficulty-tag">Easy words, simple sentences</span>
+        <span class="difficulty-tag">Easy sentences</span>
       </h2>
       <div class="badge-row">
-        <span class="badge">Theme: Waiting your turn</span>
-        <span class="badge">One main choice + consequence</span>
+        <span class="badge">More detail</span>
+        <span class="badge">A few new words</span>
       </div>
 
-      <div class="comic">
-        <!-- Panel 1 -->
-        <div class="panel">
-          <span class="panel-tag">Start</span>
-          <div class="scene">Sam and Mia stand in a line for the slide.</div>
-          <p class="bubble"><strong>Mia:</strong> It is my turn now.</p>
-        </div>
-
-        <!-- Panel 2 - Choice -->
-        <div class="panel">
-          <span class="panel-tag">Big choice</span>
-          <div class="scene">Sam thinks, “I want to go first.”</div>
-          <p class="narration">What should Sam do?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l2-turn"
-                    data-result="l2-turn-right">
-              ✅ Wait for his turn
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l2-turn"
-                    data-result="l2-turn-wrong">
-              🚫 Cut in front of Mia
-            </button>
-          </div>
-          <div id="l2-turn-right" class="result right">
-            <strong>Right:</strong> Sam waits in line. He feels proud and kind.
-          </div>
-          <div id="l2-turn-wrong" class="result wrong">
-            <strong>Wrong:</strong> Sam cuts in line. Mia feels mad and hurt.
-          </div>
-        </div>
-
-        <!-- Panel 3 - What comes next -->
-        <div class="panel">
-          <span class="panel-tag">What comes next</span>
-          <div class="scene">Sam wants to fix his choice.</div>
-          <p class="bubble"><strong>Sam:</strong> I am sorry. You go first.</p>
-          <p class="narration">
-            Mia smiles. She slides. Then Sam takes his turn. Both friends feel good.
-          </p>
-        </div>
+      <div class="panel">
+        <span class="panel-tag">Story</span>
+        <p class="narration">
+          I am Sam.
+          I see a big brown dog in the yard.
+          The dog has a red ball.
+          I run to the dog.
+          The dog drops the ball.
+          I pick up the ball and smile.
+        </p>
       </div>
 
       <div class="words-box">
-        <strong>New words in this level:</strong>
-        <br />
-        line, turn, proud, mad, fix
-      </div>
-
-      <div class="nav-bottom">
-        <button onclick="goToLevel('level-1')">Back to Level 1</button>
-        <button onclick="goToLevel('level-3')">Try Level 3</button>
-        <button onclick="resetChoices()">Start this level again</button>
+        <strong>New words in this level:</strong><br />
+        brown, yard, has, run, drops, pick, smile
       </div>
     </section>
 
-    <!-- LEVEL 3 -->
+    <!-- LEVEL 3: full sentences, connectors -->
     <section id="level-3" class="level-section">
       <h2 class="level-title">
         Level 3
-        <span class="difficulty-tag">Medium sentences, moral words</span>
+        <span class="difficulty-tag">Medium sentences</span>
       </h2>
       <div class="badge-row">
-        <span class="badge">Theme: Telling the truth</span>
-        <span class="badge">Two choices, more detail</span>
+        <span class="badge">Full sentences</span>
+        <span class="badge">Connectors like “and”, “but”</span>
       </div>
 
-      <div class="comic">
-        <!-- Panel 1 -->
-        <div class="panel">
-          <span class="panel-tag">Start</span>
-          <div class="scene">Sam and his friend Lee play with blocks in class.</div>
-          <p class="bubble"><strong>Sam:</strong> Let’s build a tall tower.</p>
-        </div>
-
-        <!-- Panel 2 -->
-        <div class="panel">
-          <span class="panel-tag">Problem</span>
-          <div class="scene">Sam jumps too close. The tower falls down.</div>
-          <p class="bubble"><strong>Lee:</strong> Oh no! Our tower!</p>
-          <p class="narration">The teacher hears the crash and walks over.</p>
-        </div>
-
-        <!-- Panel 3 - Choice -->
-        <div class="panel">
-          <span class="panel-tag">Choice 1</span>
-          <div class="scene">The teacher asks, “What happened to the tower?”</div>
-          <p class="narration">What should Sam say?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l3-truth"
-                    data-result="l3-truth-right">
-              ✅ Tell the truth
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l3-truth"
-                    data-result="l3-truth-wrong">
-              🚫 Say “Lee did it”
-            </button>
-          </div>
-          <div id="l3-truth-right" class="result right">
-            <strong>Right:</strong> Sam says, “I jumped too close and knocked it down.”
-          </div>
-          <div id="l3-truth-wrong" class="result wrong">
-            <strong>Wrong:</strong> Sam says, “Lee broke it,” even though it is not true.
-          </div>
-        </div>
-
-        <!-- Panel 4 - What comes next -->
-        <div class="panel">
-          <span class="panel-tag">What comes next</span>
-          <div class="scene">Truth and fixing the problem.</div>
-          <p class="narration" id="l3-next-text">
-            When Sam tells the truth, the teacher calls him honest and helps them rebuild. Lee feels safe and calm.
-          </p>
-        </div>
+      <div class="panel">
+        <span class="panel-tag">Story</span>
+        <p class="narration">
+          My name is Sam and I like to play outside.
+          A big brown dog runs to me with a red ball in his mouth.
+          I want to throw the ball, but the grass is wet.
+          I walk slowly so I do not slip, and the dog waits for me.
+          I throw the ball far, and the happy dog races after it.
+        </p>
       </div>
 
       <div class="words-box">
-        <strong>New words in this level:</strong>
-        <br />
-        honest, safe, calm, crash, rebuild
-      </div>
-
-      <div class="nav-bottom">
-        <button onclick="goToLevel('level-2')">Back to Level 2</button>
-        <button onclick="goToLevel('level-4')">Try Level 4</button>
-        <button onclick="resetChoices()">Start this level again</button>
+        <strong>New words in this level:</strong><br />
+        name, like, outside, mouth, want, throw, grass, wet, slowly, slip, waits, far, races, after, happy
       </div>
     </section>
 
-    <!-- LEVEL 4 -->
+    <!-- LEVEL 4: longer sentences and a short paragraph -->
     <section id="level-4" class="level-section">
       <h2 class="level-title">
         Level 4
-        <span class="difficulty-tag">Longer sentences, more detail</span>
+        <span class="difficulty-tag">Longer sentences</span>
       </h2>
       <div class="badge-row">
-        <span class="badge">Theme: Keeping others safe</span>
-        <span class="badge">Two decisions, clear consequences</span>
+        <span class="badge">Short paragraph</span>
+        <span class="badge">Describing feelings</span>
       </div>
 
-      <div class="comic">
-        <!-- Panel 1 -->
-        <div class="panel">
-          <span class="panel-tag">Start</span>
-          <div class="scene">At the park, there is a big puddle by the slide.</div>
-          <p class="bubble"><strong>Sam:</strong> I want to run and splash!</p>
-        </div>
-
-        <!-- Panel 2 - Choice 1 -->
-        <div class="panel">
-          <span class="panel-tag">Choice 1</span>
-          <div class="scene">A sign says, “No running. Wet ground is slippery.”</div>
-          <p class="narration">What is the safe choice?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l4-safe1"
-                    data-result="l4-safe1-right">
-              ✅ Walk slowly around the puddle
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l4-safe1"
-                    data-result="l4-safe1-wrong">
-              🚫 Run and splash in the puddle
-            </button>
-          </div>
-          <div id="l4-safe1-right" class="result right">
-            <strong>Right:</strong> Sam walks carefully and keeps everyone safe and dry.
-          </div>
-          <div id="l4-safe1-wrong" class="result wrong">
-            <strong>Wrong:</strong> Sam runs, slips and bumps into another child.
-          </div>
-        </div>
-
-        <!-- Panel 3 - Choice 2 -->
-        <div class="panel">
-          <span class="panel-tag">Choice 2</span>
-          <div class="scene">A younger child sees Sam and starts to copy him.</div>
-          <p class="narration">What should Sam do next?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l4-safe2"
-                    data-result="l4-safe2-right">
-              ✅ Help the child walk and warn them
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l4-safe2"
-                    data-result="l4-safe2-wrong">
-              🚫 Laugh and run faster
-            </button>
-          </div>
-          <div id="l4-safe2-right" class="result right">
-            <strong>Right:</strong> Sam says, “We must walk. It is slippery,” and shows a safe path.
-          </div>
-          <div id="l4-safe2-wrong" class="result wrong">
-            <strong>Wrong:</strong> Sam laughs and runs, and the young child almost falls.
-          </div>
-        </div>
-
-        <!-- Panel 4 - What comes next -->
-        <div class="panel">
-          <span class="panel-tag">What comes next</span>
-          <div class="scene">The grown-up at the park sees what Sam does.</div>
-          <p class="narration">
-            When Sam chooses to walk and help, the grown-up calls him responsible and respectful.
-            Everyone enjoys the park because they feel safe.
-          </p>
-        </div>
+      <div class="panel">
+        <span class="panel-tag">Story</span>
+        <p class="narration">
+          Every afternoon, I meet the big brown dog at the yard gate.
+          He carries his red ball and wags his tail because he knows we will play.
+          I feel excited when I throw the ball high into the bright sky and watch it fall.
+          The dog jumps, catches the ball, and trots back to me, proud and panting.
+          We rest in the soft grass for a moment before we start another game.
+        </p>
       </div>
 
       <div class="words-box">
-        <strong>New words in this level:</strong>
-        <br />
-        slippery, responsible, respectful, carefully, copy
-      </div>
-
-      <div class="nav-bottom">
-        <button onclick="goToLevel('level-3')">Back to Level 3</button>
-        <button onclick="goToLevel('level-5')">Try Level 5</button>
-        <button onclick="resetChoices()">Start this level again</button>
+        <strong>New words in this level:</strong><br />
+        every, afternoon, gate, carries, wags, because, excited, high, bright, sky, watch, fall, jumps, catches, trots, proud, panting, rest, soft, moment, another
       </div>
     </section>
 
-    <!-- LEVEL 5 -->
+    <!-- LEVEL 5: connected paragraph, more complex connectors and vocabulary -->
     <section id="level-5" class="level-section">
       <h2 class="level-title">
         Level 5
-        <span class="difficulty-tag">Short paragraphs, strong moral words</span>
+        <span class="difficulty-tag">Short story paragraph</span>
       </h2>
       <div class="badge-row">
-        <span class="badge">Theme: Kind choices all day</span>
-        <span class="badge">Three decisions, full story</span>
+        <span class="badge">More complex ideas</span>
+        <span class="badge">Richer vocabulary</span>
       </div>
 
-      <div class="comic">
-        <!-- Panel 1 -->
-        <div class="panel">
-          <span class="panel-tag">Morning</span>
-          <div class="scene">Sam walks into class and sees a new student, Ana, standing alone.</div>
-          <p class="narration">
-            Sam remembers how it felt to be new and a little nervous.
-          </p>
-        </div>
-
-        <!-- Panel 2 - Choice 1 -->
-        <div class="panel">
-          <span class="panel-tag">Choice 1</span>
-          <div class="scene">The teacher says, “Please make Ana feel welcome.”</div>
-          <p class="narration">What should Sam do first?</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l5-day1"
-                    data-result="l5-day1-right">
-              ✅ Say hello and invite Ana to play
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l5-day1"
-                    data-result="l5-day1-wrong">
-              🚫 Whisper and giggle with other friends
-            </button>
-          </div>
-          <div id="l5-day1-right" class="result right">
-            <strong>Right:</strong> Ana feels included and her nervous feeling begins to fade.
-          </div>
-          <div id="l5-day1-wrong" class="result wrong">
-            <strong>Wrong:</strong> Ana feels left out and wonders if school will always feel unkind.
-          </div>
-        </div>
-
-        <!-- Panel 3 - Choice 2 -->
-        <div class="panel">
-          <span class="panel-tag">Choice 2</span>
-          <div class="scene">Later, during art, there are only two sets of bright markers.</div>
-          <p class="narration">Sam and Ana both reach for the same markers.</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l5-day2"
-                    data-result="l5-day2-right">
-              ✅ Take turns and share the markers fairly
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l5-day2"
-                    data-result="l5-day2-wrong">
-              🚫 Grab all the markers and say “Mine!”
-            </button>
-          </div>
-          <div id="l5-day2-right" class="result right">
-            <strong>Right:</strong> Sam suggests a plan, “We can share and trade colors,” which feels fair and friendly.
-          </div>
-          <div id="l5-day2-wrong" class="result wrong">
-            <strong>Wrong:</strong> Ana feels ignored, and the teacher must remind Sam about fairness and respect.
-          </div>
-        </div>
-
-        <!-- Panel 4 - Choice 3 -->
-        <div class="panel">
-          <span class="panel-tag">Choice 3</span>
-          <div class="scene">At clean-up time, blocks are scattered on the floor.</div>
-          <p class="narration">The teacher asks everyone to help before going outside.</p>
-          <div class="choices">
-            <button class="choice-button right"
-                    data-choice-group="l5-day3"
-                    data-result="l5-day3-right">
-              ✅ Help pick up blocks before going out
-            </button>
-            <button class="choice-button wrong"
-                    data-choice-group="l5-day3"
-                    data-result="l5-day3-wrong">
-              🚫 Run outside and leave the mess
-            </button>
-          </div>
-          <div id="l5-day3-right" class="result right">
-            <strong>Right:</strong> Sam stays to clean, showing he is responsible and helpful.
-          </div>
-          <div id="l5-day3-wrong" class="result wrong">
-            <strong>Wrong:</strong> Other students must work harder, and the room stays messy for longer.
-          </div>
-        </div>
-
-        <!-- Panel 5 - What comes next -->
-        <div class="panel">
-          <span class="panel-tag">What comes next</span>
-          <div class="scene">End of the school day.</div>
-          <p class="narration">
-            When Sam chooses kind and fair actions, Ana feels welcome, the class feels calm,
-            and the teacher trusts Sam to be thoughtful and responsible. These right choices
-            make the whole day better for everyone.
-          </p>
-        </div>
+      <div class="panel">
+        <span class="panel-tag">Story</span>
+        <p class="narration">
+          After school, I hurry home because I know the big brown dog is waiting for me with his red ball.
+          The day is cool and breezy, so the leaves dance while we play in the yard.
+          I throw the ball again and again until my arms feel tired, but the dog still runs with endless energy.
+          When the sun begins to set and the sky turns orange, we finally slow down and sit together in the quiet grass.
+          I pet his warm fur and feel calm, knowing we will play this same happy game again tomorrow.
+        </p>
       </div>
 
       <div class="words-box">
-        <strong>New words in this level:</strong>
-        <br />
-        included, nervous, welcome, fairly, thoughtful, responsible
-      </div>
-
-      <div class="nav-bottom">
-        <button onclick="goToLevel('level-4')">Back to Level 4</button>
-        <button onclick="goToLevel('level-1')">Back to Level 1</button>
-        <button onclick="resetChoices()">Start this level again</button>
+        <strong>New words in this level:</strong><br />
+        after, school, hurry, waiting, cool, breezy, leaves, dance, again, until, tired, endless, energy, begins, set, orange, finally, slow, quiet, calm, tomorrow
       </div>
     </section>
   </main>
 
   <script>
-    // Level switching
     const levelButtons = document.querySelectorAll(".level-button");
     const levelSections = document.querySelectorAll(".level-section");
 
@@ -745,37 +461,12 @@
       levelButtons.forEach(btn => {
         btn.classList.toggle("active", btn.dataset.target === id);
       });
-      resetChoices();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     levelButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         goToLevel(btn.dataset.target);
-      });
-    });
-
-    // Choice handling
-    function resetChoices() {
-      document.querySelectorAll(".result").forEach(r => {
-        r.style.display = "none";
-      });
-    }
-
-    document.querySelectorAll(".choice-button").forEach(button => {
-      button.addEventListener("click", () => {
-        const group = button.dataset.choiceGroup;
-        const targetId = button.dataset.result;
-
-        // Hide all results in this group
-        document.querySelectorAll(`.result[id^="${group}"], .result[id*="${group}"]`).forEach(r => {
-          r.style.display = "none";
-        });
-
-        const target = document.getElementById(targetId);
-        if (target) {
-          target.style.display = "block";
-        }
       });
     });
   </script>

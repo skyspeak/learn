@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learning to Read Storybook – 20 Stories × 5 Levels</title>
+  <style>
+    :root {
+      --bg: #f0f9ff;
+      --card: #ffffff;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --text: #111827;
+      --muted: #6b7280;
+      --active: #f97316;
+      --hard-word: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe, #f0f9ff);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(to right, #0f172a, #1d4ed8);
+      color: #f9fafb;
+      padding: 18px 20px 14px 20px;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.5);
+    }
+
+    header h1 {
+      margin: 0 0 4px 0;
+      font-size: 2.1rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #cbd5f5;
+    }
+
+    main {
+      max-width: 1040px;
+      margin: 8px auto 32px auto;
+      padding: 20px 24px 24px 24px;
+    }
+
+    .helper {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    .story-picker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .story-picker-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .story-select {
+      min-height: 44px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 2px solid #38bdf8;
+      background: #eff6ff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+      cursor: pointer;
+    }
+
+    .story-nav-btn {
+      min-height: 40px;
+      min-width: 40px;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      color: #111827;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .story-nav-btn:active {
+      transform: scale(0.96);
+    }
+
+    .story-section {
+      display: none;
+    }
+
+    .story-section.active {
+      display: block;
+    }
+
+    .story-header {
+      margin-bottom: 8px;
+    }
+
+    .story-title {
+      margin: 0;
+      font-size: 1.7rem;
+      color: #1d4ed8;
+    }
+
+    .story-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 0.8rem;
+    }
+
+    .tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .level-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .level-button {
+      border-radius: 999px;
+      border: none;
+      min-height: 40px;
+      padding: 0 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .level-button.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .level-panel {
+      display: none;
+    }
+
+    .level-panel.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      border-top: 5px solid #38bdf8;
+      padding: 24px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+    }
+
+    .difficulty-note {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .story-text {
+      font-size: 1.6rem;
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    .hard {
+      color: var(--hard-word);
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 2px;
+    }
+
+    .word-box {
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #fefce8;
+      font-size: 0.9rem;
+    }
+
+    .word-box strong {
+      font-size: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .helper {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Learning to Read – 20 Stories × 5 Levels</h1>
+  </header>
+
+  <main>
+    <!-- STORY PICKER DROPDOWN -->
+    <div class="story-picker">
+      <button class="story-nav-btn" id="prevStory" aria-label="Previous story">◀</button>
+      <span class="story-picker-label">Story:</span>
+      <select class="story-select" id="storySelect">
+        <option value="story-1">Story 1 – The Red Ball</option>
+        <option value="story-2">Story 2 – Cat on the Mat</option>
+        <option value="story-3">Story 3 – Rainy Day</option>
+        <option value="story-4">Story 4 – The Lost Hat</option>
+        <option value="story-5">Story 5 – Picnic in the Park</option>
+        <option value="story-6">Story 6 – The Busy Street</option>
+        <option value="story-7">Story 7 – The Quiet Library</option>
+        <option value="story-8">Story 8 – The Big Birthday</option>
+        <option value="story-9">Story 9 – Night at Home</option>
+        <option value="story-10">Story 10 – The Little Seed</option>
+        <option value="story-11">Story 11 – Snowy Hill</option>
+        <option value="story-12">Story 12 – The New Bike</option>
+        <option value="story-13">Story 13 – At the Farm</option>
+        <option value="story-14">Story 14 – The Lost Tooth</option>
+        <option value="story-15">Story 15 – The Tall Tree</option>
+        <option value="story-16">Story 16 – Beach Day</option>
+        <option value="story-17">Story 17 – The Big Game</option>
+        <option value="story-18">Story 18 – The Little Robot</option>
+        <option value="story-19">Story 19 – The New Friend</option>
+        <option value="story-20">Story 20 – Camping Night</option>
+      </select>
+      <button class="story-nav-btn" id="nextStory" aria-label="Next story">▶</button>
+    </div>
+
+    <!-- TEMPLATE FOR STORIES:
+         Each story has a .story-section with id="story-N"
+         Inside: level picker + 5 .level-panel blocks
+    -->
+
+    <!-- STORY 1: The Red Ball -->
+    <section id="story-1" class="story-section active">
+      <div class="story-header">
+        <h2 class="story-title">Story 1 – The Red Ball</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: pet and play</span>
+          <span class="tag">Setting: yard</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-1">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <p class="difficulty-note">Level 1: very short sentences, easiest words.</p>
+        <div class="level-panel active" data-level-panel="1">
+          <div class="story-text">
+I am Sam.
+I see a dog.
+The dog is big.
+I see a red ball.
+I get the ball.
+The dog runs.
+We play.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            I, am, Sam, see, a, dog, the, is, big, red, ball, get, runs, we, play
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more detail, a few new words.</p>
+          <div class="story-text">
+I am Sam, and I see a big brown dog in the yard.
+The dog has a red ball in his mouth.
+I walk to the dog and pat his head.
+He drops the ball, and I pick it up.
+I throw the ball, and the dog runs fast to get it.
+We play with the red ball again and again.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            brown, yard, has, mouth, walk, pat, head, drops, pick, throw, fast, again
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: full sentences with “and / but / so”.</p>
+          <div class="story-text">
+My <span class="hard">name</span> is Sam, and I <span class="hard">like</span> to play in the yard <span class="hard">after</span> school.
+A big brown dog runs to me with a <span class="hard">bright</span> red ball in his mouth.
+I want to throw the ball <span class="hard">far</span>, but the grass is wet and I <span class="hard">might</span> slip.
+I walk slowly so I stay <span class="hard">safe</span>, and the dog waits and wags his tail.
+When I am <span class="hard">ready</span>, I throw the ball <span class="hard">high</span> into the <span class="hard">air</span>, and the happy dog <span class="hard">races</span> after it.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            name, like, after, school, bright, far, might, stay, safe, ready, high, air, races, happy
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: short paragraph, richer description.</p>
+          <div class="story-text">
+Every afternoon, I open the back gate and see the big brown dog waiting for me with his red ball.
+He prances in the soft grass and wags his tail because he knows we will play our favorite game.
+I feel excited as I swing my arm and send the ball sailing across the yard.
+The dog sprints after it, skids in the grass, and then trots back with the ball held proudly in his mouth.
+We rest for a moment in the shade before we begin another round.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            every, open, back, gate, waiting, prances, favorite, swing, send, sailing, sprints,
+            skids, trots, proudly, shade, begin, round
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: connected short story with time words.</p>
+          <div class="story-text">
+After a long day at school, I hurry home because I know my big brown dog is waiting by the yard gate with his red ball.
+The air feels cool and a little breezy, and the leaves on the trees rustle softly as we start our game.
+First I toss the ball gently so the dog can warm up, but soon I throw it higher and farther, and he chases it with endless energy.
+When the sun begins to slide down and the sky turns orange and pink, we finally slow our running and sit together in the quiet grass.
+I stroke his warm fur and feel calm and proud, knowing we will play this same happy game again tomorrow.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            long, feels, breezy, leaves, trees, rustle, softly, gently, warm up, farther,
+            endless, begins, slide, finally, stroke, calm, tomorrow
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 2: Cat on the Mat -->
+    <section id="story-2" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 2 – Cat on the Mat</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: home and pet</span>
+          <span class="tag">Setting: living room</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-2">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: very simple pattern.</p>
+          <div class="story-text">
+I see a cat.
+The cat is on the mat.
+The mat is red.
+I pat the cat.
+The cat purrs.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            I, see, a, cat, the, is, on, mat, red, pat, purrs
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more actions.</p>
+          <div class="story-text">
+I see my cat on the red mat in the living room.
+She curls her tail and blinks at me.
+I sit down and pat her soft fur.
+She purrs and rolls on her back.
+I laugh and say, “You like this mat.”
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            my, she, curls, tail, blinks, sit, soft, fur, rolls, laugh, like
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: describing the room.</p>
+          <div class="story-text">
+My cat likes to rest on the red mat in the middle of our living room.
+While I read a book on the couch, she stretches her paws and flicks her tail.
+If I stop to pat her, she closes her eyes and purrs louder and louder.
+The sound makes the room feel warm and quiet, like a small, safe nest.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            rest, middle, room, read, couch, stretches, paws, flicks, closes, louder, nest
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: short paragraph with feelings.</p>
+          <div class="story-text">
+Every evening, the red mat in our living room becomes my cat’s favorite spot.
+She steps onto it, turns in a slow circle, and then curls into a tidy ball.
+When I sit beside her and gently stroke her back, she purrs like a tiny engine.
+The light from the lamp makes the mat glow, and the whole room feels calm and cozy.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            evening, becomes, favorite, steps, circle, curls, tidy, gently, stroke,
+            engine, lamp, glow, cozy
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: expanded description, comparison.</p>
+          <div class="story-text">
+On cold days, the red mat in our living room is like a little island of warmth for my cat.
+She pads over from the window, where the glass feels chilly, and settles on the mat with a long, contented sigh.
+When I sit nearby to draw or read, she watches my pencil move and then slowly closes her eyes.
+Her steady purr fills the quiet room, and I feel as peaceful as if we were both wrapped in a soft blanket.
+Sometimes I think the mat is small, but the feeling it brings is as big as our whole house.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            cold, island, warmth, pads, window, glass, chilly, settles, contented,
+            steady, peaceful, wrapped, blanket, whole
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 3: Rainy Day -->
+    <section id="story-3" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 3 – Rainy Day</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: weather</span>
+          <span class="tag">Setting: home indoors</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-3">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple weather words.</p>
+          <div class="story-text">
+It is rain.
+I see the rain.
+The rain is wet.
+I sit in the house.
+I see the rain on the glass.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            it, is, rain, I, see, the, wet, sit, in, house, on, glass
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: activities inside.</p>
+          <div class="story-text">
+Rain taps on the window, and the sky is gray.
+I cannot play outside, so I build a tall block tower on the rug.
+Mom gives me a warm drink in a cup.
+We sit by the window and watch the drops slide down the glass.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            taps, window, gray, cannot, outside, build, tower, rug, warm, drink, cup, drops, slide
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: cause and effect.</p>
+          <div class="story-text">
+When the rain falls hard, the streets outside look shiny and dark.
+I feel a little disappointed because I wanted to ride my bike, but I also feel cozy inside.
+Mom and I spread a blanket on the floor and read books together.
+The soft drum of the rain on the roof makes our house sound like a safe, hidden cave.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            falls, hard, streets, shiny, dark, disappointed, wanted, ride, bike,
+            spread, blanket, drum, roof, hidden, cave
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: longer paragraph, feelings shifting.</p>
+          <div class="story-text">
+At first, I press my nose to the window and sigh because the steady rain ruins my plan to play at the park.
+But as the day goes on, the room fills with the warm smell of soup, and soft music plays in the background.
+I draw pictures of umbrellas and puddles while Mom tells me stories about rainy days from when she was little.
+By the time the clouds begin to break, I feel calm and glad we had a quiet, rainy day together.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            press, nose, steady, ruins, plan, smell, soup, music, background,
+            umbrellas, puddles, clouds, break, together
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: reflection and comparison.</p>
+          <div class="story-text">
+This morning I was sure a rainy day would be boring, because I pictured myself staring out the window and doing nothing at all.
+Instead, the sound of the rain became a gentle beat that followed us through the day like a song.
+We cooked soup, read new stories, and even made a tiny paper boat to float in a bowl of water.
+When the rain finally slowed and a thin strip of blue sky appeared, I realized that staying inside had felt like a cozy adventure.
+Now, whenever I hear rain on the roof, I wonder what quiet surprises might be waiting for us.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            boring, pictured, staring, gentle, beat, followed, cooked, tiny, boat,
+            float, bowl, finally, strip, realized, adventure, surprises
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 4: The Lost Hat -->
+    <section id="story-4" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 4 – The Lost Hat</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: problem and solution</span>
+          <span class="tag">Setting: playground</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-4">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple loss and find.</p>
+          <div class="story-text">
+I have a hat.
+It is blue.
+I go to the park.
+I run and play.
+My hat is not on my head.
+I see my hat on the slide.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            I, have, a, hat, it, is, blue, go, to, park, run, play, not, on, my, head, see, slide
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more steps in the search.</p>
+          <div class="story-text">
+I wear my blue hat to the playground.
+I swing, climb, and go down the slide.
+When I stop to drink water, I see my head is cold.
+My hat is gone!
+I look by the swings and under the bench.
+Then I see my hat hanging on the side of the slide.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            wear, playground, swing, climb, drink, water, cold, gone, look,
+            under, bench, hanging, side
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: emotions and asking for help.</p>
+          <div class="story-text">
+At the park, I run so fast that my blue hat flies off without me noticing.
+Later, when the wind makes my ears feel cold, I reach up and feel only hair.
+My stomach twists because I think I have lost my favorite hat.
+I ask my friend to help me search, and together we walk around the swing set, the sandbox, and the slide.
+When we finally spot the hat stuck on the rail, we laugh with relief.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            flies, noticing, later, wind, ears, stomach, twists, favorite, search,
+            together, sandbox, rail, relief
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: clear beginning, middle, end.</p>
+          <div class="story-text">
+In the morning, I proudly put on my new blue hat before we walk to the playground.
+The day is bright and breezy, so I race from the swings to the climbing frame without holding my hat.
+By the time I sit down for a snack, my hair is messy and my hat has vanished.
+I feel worried and a little angry at myself, but my friend reminds me that we can look carefully.
+We retrace our steps and finally find the hat resting on top of the slide ladder, just where the wind left it.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            proudly, new, bright, breezy, frame, snack, vanished, angry,
+            reminds, carefully, retrace, resting, ladder
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: lesson learned.</p>
+          <div class="story-text">
+Losing my blue hat at the playground felt terrible at first, because I imagined it was gone forever.
+I pictured someone else finding it and wearing it home, while I had to walk back with cold ears and messy hair.
+But when my friend suggested that we retrace every place we had played, I realized there was still hope.
+We checked the bench, the swings, the sandbox, and even the bushes by the fence.
+At last we spotted my hat perched on top of the slide ladder, and I promised myself I would hold it tight on windy days.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            imagined, forever, pictured, suggested, hope, checked, bushes,
+            fence, at last, perched, promised, tight, windy
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 5: Picnic in the Park -->
+    <section id="story-5" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 5 – Picnic in the Park</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: family outing</span>
+          <span class="tag">Setting: park</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-5">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple outing.</p>
+          <div class="story-text">
+We go to the park.
+We sit on the grass.
+We have a big red bag.
+We eat and drink.
+We see a duck.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            we, go, to, park, sit, on, grass, have, big, red, bag, eat, drink, see, duck
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: adding food words.</p>
+          <div class="story-text">
+My family goes to the park with a big red picnic bag.
+We spread a blue blanket on the soft grass.
+Mom takes out sandwiches, fruit, and juice.
+We eat, talk, and watch ducks swim in the pond.
+The sun feels warm on our faces.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            family, picnic, spread, blanket, soft, takes, out, sandwiches,
+            fruit, juice, talk, swim, pond, faces
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: small problem, small fix.</p>
+          <div class="story-text">
+At the park, we lay our blanket under a tall tree so we can sit in the shade.
+The wind tries to lift the corners, so we place our shoes on them to keep the blanket flat.
+We share crunchy carrots and sweet apples while we listen to birds singing.
+When a curious duck waddles close, we giggle and drop a crumb by accident, then quickly brush the crumbs away.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            lay, tall, shade, corners, place, shoes, crunchy, carrots,
+            sweet, apples, listen, birds, curious, waddles, crumb, accident, brush
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: sequence of events.</p>
+          <div class="story-text">
+First we pick a spot near the pond where we can see the water sparkle in the sun.
+Next we unfold our blanket and unpack sandwiches, cups, and a cold bottle of lemonade.
+While we eat, we tell stories and watch clouds drift slowly across the sky.
+Later, we throw a soft ball back and forth, careful not to toss it into the pond.
+By the time we pack up, the afternoon light has turned golden, and the park feels calm and gentle.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            first, pick, spot, sparkle, unfold, unpack, cups, lemonade,
+            drift, across, later, toss, pack up, afternoon, golden, gentle
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: reflection on family time.</p>
+          <div class="story-text">
+Our picnic in the park is not fancy, but it feels special because we slow down and enjoy being together.
+There is no rush to finish eating, so we savor each bite and listen to the sounds around us.
+Children laugh on the playground, ducks splash in the pond, and the breeze rustles the leaves above our heads.
+When we finally fold the blanket and head home, my legs are tired from running, but my heart feels light.
+I decide that simple days like this are my favorite kind of adventure.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            fancy, special, slow down, enjoy, rush, finish, savor, sounds,
+            children, splash, breeze, rustles, finally, decide, simple, adventure
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 6: The Busy Street -->
+    <section id="story-6" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 6 – The Busy Street</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: safety</span>
+          <span class="tag">Setting: city street</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-6">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: basic safety idea.</p>
+          <div class="story-text">
+I stand on the path.
+Cars go on the street.
+I hold Mom’s hand.
+We wait for the light.
+We walk when it is green.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            stand, path, cars, go, street, hold, hand, wait, light, walk, green
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: adding rules.</p>
+          <div class="story-text">
+The street is busy with cars and buses.
+Mom and I stop at the corner and hold hands.
+We look left, look right, and look left again.
+When the little person on the sign turns green, we walk across the street.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            busy, buses, corner, hands, left, right, sign, across
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: clearer steps and reasons.</p>
+          <div class="story-text">
+Our city street is full of cars, bikes, and people in a hurry.
+Before we cross, Mom squeezes my hand and reminds me to stop at the edge of the sidewalk.
+We study the traffic, count to three, and wait for the walking signal.
+When the cars pause and the light changes, we cross together in a straight line.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            city, bikes, hurry, squeezes, reminds, edge, sidewalk, study, traffic, count, signal, pause, straight
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: describing sounds and sights.</p>
+          <div class="story-text">
+The busy street hums with noise as cars roar past, horns beep, and people talk on their phones.
+All of that sound makes it hard to think, so I am glad Mom holds my hand tightly.
+We wait at the crosswalk until the red light forces the cars to stop and the walk sign appears.
+I listen for quiet wheels and look both ways one more time before we step off the curb.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            hums, roar, horns, beep, tightly, crosswalk, forces, appears, wheels, curb
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: small reflection on safety.</p>
+          <div class="story-text">
+Walking along a busy street can feel confusing, because so many things move and make noise at the same time.
+Cars flash by, bikes weave through gaps, and sirens sometimes scream in the distance.
+Mom explains that even when we are in a hurry, safety must come first, so we always stop, look, and listen before we cross.
+As we reach the other side, I feel proud that I remembered each step, and I know that these habits will help keep me safe every day.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            confusing, flash, weave, gaps, sirens, distance, explains, habits, proud, remembered
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 7: The Quiet Library -->
+    <section id="story-7" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 7 – The Quiet Library</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: books and rules</span>
+          <span class="tag">Setting: library</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-7">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: basic library idea.</p>
+          <div class="story-text">
+We go to the library.
+Books are on the shelf.
+We walk, not run.
+We talk in a soft voice.
+We pick a book.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            go, library, books, on, shelf, walk, not, run, talk, soft, voice, pick
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more actions with books.</p>
+          <div class="story-text">
+The library is quiet, so we walk between tall shelves.
+Mom shows me how to slide a book out gently and hold it with two hands.
+We sit at a small table and turn the pages slowly.
+When we are done, we put the book back where it belongs.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            between, tall, shows, slide, gently, hands, table, turn, pages, belongs
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: choosing a book.</p>
+          <div class="story-text">
+I look at rows of colorful book spines and try to choose just one to read.
+Some books have animals on the cover, and others show rockets, robots, or funny faces.
+I whisper the titles to myself while I decide.
+At last I pick a story about a brave cat, and Mom helps me check it out with the librarian.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            rows, spines, choose, cover, rockets, robots, whisper, titles, decide, brave, librarian
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: library as a special place.</p>
+          <div class="story-text">
+The library feels like a quiet forest made of stories, with book shelves standing like tall trees all around us.
+Light from the high windows falls across the tables where people read and write.
+When I open my book, the room disappears and the story world fills my mind instead.
+Even though we hardly speak, I feel close to everyone there, because we are all sharing the same gentle silence.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            forest, stories, standing, around, windows, falls, disappears, world, fills, hardly, sharing, silence
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: reflecting on reading.</p>
+          <div class="story-text">
+Whenever I visit the library, I feel like I am choosing a new door to open in my mind.
+Each book holds a different place, a different time, or a different voice that wants to speak to me.
+The quiet rules in the library are not just about being polite; they help every reader travel in their own imagination.
+When I leave with a book tucked under my arm, I carry more than paper and pages—I carry the promise of another adventure waiting for me at home.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            whenever, choosing, different, polite, travel, imagination, tucked, promise, adventure
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 8: The Big Birthday -->
+    <section id="story-8" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 8 – The Big Birthday</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: celebration</span>
+          <span class="tag">Setting: home party</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-8">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple party.</p>
+          <div class="story-text">
+It is my big day.
+I see a cake.
+I see a hat.
+My friends clap.
+I blow out one candle.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            it, is, my, big, day, see, cake, hat, friends, clap, blow, out, one, candle
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more birthday details.</p>
+          <div class="story-text">
+Balloons hang from the wall, and a bright banner says “Happy Birthday.”
+My friends wear silly hats and hold small gifts.
+We sing together while Mom brings in the cake.
+I make a wish and blow out all the candles at once.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            balloons, hang, banner, happy, birthday, silly, gifts, sing, wish, once
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: games and sharing.</p>
+          <div class="story-text">
+At my birthday party, we play simple games like “Pin the Tail” and “Pass the Parcel.”
+Everyone laughs when the blindfold slips and someone pins the tail on the wall.
+After the games, we share slices of cake and pass around paper cups of juice.
+I feel proud and a little shy when my friends shout my name.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            party, simple, games, pin, tail, parcel, blindfold, slices, around, proud, shy
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: focusing on feelings.</p>
+          <div class="story-text">
+When I wake up on my birthday, my stomach feels full of tiny, fluttering butterflies.
+All day I wait for the moment when my friends will ring the doorbell and rush inside with gifts and smiles.
+During the party, I feel excited, noisy, and a little overwhelmed by all the voices and music.
+Later, when the guests leave, the house is quiet again, and I slowly open each card and remember every kind word.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            wake, stomach, fluttering, butterflies, moment, ring, doorbell,
+            rush, inside, excited, overwhelmed, guests, card, remember, kind
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: looking back on the day.</p>
+          <div class="story-text">
+At the end of my big birthday, I sit on my bed and think about every part of the day.
+The colorful balloons are drooping, the cake plates are stacked in the sink, and bits of wrapping paper still sparkle on the floor.
+I feel tired but happy, because my friends and family used their time to make this day special for me.
+As I fall asleep, I realize that the best gift was not the toys or treats, but the feeling of being loved and remembered.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            end, sit, bed, drooping, stacked, sink, wrapping, sparkle,
+            tired, treats, loved, remembered
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 9: Night at Home -->
+    <section id="story-9" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 9 – Night at Home</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: bedtime routine</span>
+          <span class="tag">Setting: home at night</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-9">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple bedtime.</p>
+          <div class="story-text">
+It is night.
+I put on my red bed shirt.
+I brush my teeth.
+I get in bed.
+Mom turns off the light.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            night, put, on, bed, shirt, brush, teeth, get, in, mom, turns, off, light
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: adding order of steps.</p>
+          <div class="story-text">
+First I clean up my toys and put them in the box.
+Then I brush my teeth until they feel smooth.
+I change into my soft pajamas and climb into bed.
+Mom tucks the blanket under my chin and kisses my head goodnight.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            first, clean, toys, box, then, until, smooth, change, pajamas, climb, tucks, blanket, chin, kisses, goodnight
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: adding sounds and small worries.</p>
+          <div class="story-text">
+When the house gets quiet at night, I hear new sounds.
+The fridge hums, the pipes tick, and a car moves slowly down the street.
+Sometimes these noises make me feel a little nervous.
+Mom reminds me that the sounds mean our house is working and we are safe inside.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            fridge, hums, pipes, tick, slowly, noises, nervous, reminds, working, safe
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: using imagination.</p>
+          <div class="story-text">
+The shadows on my wall look like mountains and trees when the night-light glows.
+I imagine tiny explorers climbing the peaks and camping under glowing stars.
+As Mom reads a story in a soft, sleepy voice, my eyes grow heavy.
+Little by little, the pictures from the book mix with my own dreams.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            shadows, wall, mountains, trees, night-light, imagine, explorers, peaks,
+            camping, glowing, stars, sleepy, heavy, mix, dreams
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: comfort and reflection.</p>
+          <div class="story-text">
+Lying in my bed at night, I think about everything that happened during the day.
+Some moments were noisy and busy, but now the room is still and calm.
+I listen to the slow rhythm of my breathing and feel the steady hug of the blanket around me.
+Soon, my thoughts drift away like clouds, and I fall asleep feeling safe, warm, and ready for tomorrow.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            lying, happened, moments, still, rhythm, breathing, steady, hug, drift, clouds, asleep
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 10: The Little Seed -->
+    <section id="story-10" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 10 – The Little Seed</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: growth</span>
+          <span class="tag">Setting: garden</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-10">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: planting a seed.</p>
+          <div class="story-text">
+I have a seed.
+I dig a hole.
+I put in the seed.
+I pat the dirt.
+I give it a drink.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            have, seed, dig, hole, put, in, pat, dirt, give, drink
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: waiting for growth.</p>
+          <div class="story-text">
+I plant a little seed in a pot by the window.
+Each morning I give it a small cup of water.
+I wait and wait, but I only see brown dirt.
+One day a tiny green tip pushes up to say hello.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            plant, little, pot, window, morning, cup, water, tiny, tip, pushes, hello
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: noticing changes.</p>
+          <div class="story-text">
+Every week the seedling changes a little more.
+First it grows two small leaves, then four, and then many.
+I turn the pot so each side can feel the sun.
+The stem becomes stronger, and the leaves reach toward the light.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            week, seedling, changes, grows, leaves, turn, side, feel, stem, stronger, reach
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: moving outside.</p>
+          <div class="story-text">
+When the plant is too big for the pot, we move it into the garden.
+I dig a wider hole and tuck the roots carefully into the cool soil.
+Rain falls and soaks the ground, and sun warms the leaves.
+Soon the plant stands taller than my knees, and tiny buds begin to appear.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            move, garden, wider, tuck, roots, carefully, soil, falls, soaks, taller, knees, buds, appear
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: connecting to patience.</p>
+          <div class="story-text">
+Watching the little seed grow into a strong plant takes many days, and sometimes I feel impatient.
+On cloudy mornings it hardly seems to change at all, but beneath the soil the roots keep spreading.
+Mom tells me that plants teach us to be patient, because they move slowly but never stop.
+When bright flowers finally open, I remember every time I watered, waited, and believed the seed would grow.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            watching, strong, many, impatient, cloudy, beneath, spreading, teach,
+            slowly, never, finally, watered, believed
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 11: Snowy Hill -->
+    <section id="story-11" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 11 – Snowy Hill</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: seasons</span>
+          <span class="tag">Setting: winter hill</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-11">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: snow and sled.</p>
+          <div class="story-text">
+Snow is on the hill.
+I sit on my sled.
+Dad holds the rope.
+We go down fast.
+We laugh in the snow.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            snow, on, hill, sit, sled, dad, holds, rope, go, down, fast, laugh
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: getting ready for cold.</p>
+          <div class="story-text">
+We bundle up in coats, hats, and warm gloves.
+The hill behind our house is covered in white snow.
+I sit in front on the sled while Dad pulls us to the top.
+The air feels cold on my cheeks, but I am excited to ride.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            bundle, coats, hats, warm, gloves, behind, covered, white, pulls, top, cheeks, excited
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: describing the ride.</p>
+          <div class="story-text">
+From the top of the hill, the world looks small and bright.
+Dad counts “one, two, three,” and then gives the sled a push.
+We slide over bumps and leave a long, wavy line in the snow.
+The wind rushes past my ears, and I shout with joy all the way down.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            top, world, small, bright, counts, push, slide, bumps, wavy, line, wind, rushes, joy
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: more reflection on winter.</p>
+          <div class="story-text">
+We climb the snowy hill again and again until our legs feel heavy.
+Each time the sled races down, it carves a deeper path in the snow.
+My nose tingles and my fingers feel stiff, but I do not want to stop.
+Winter days like this make the cold air feel friendly instead of sharp.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            climb, again, legs, heavy, races, carves, deeper, path, tingles, stiff, instead, sharp
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: ending warm inside.</p>
+          <div class="story-text">
+When we finally head home from the snowy hill, my boots squeak and crunch with every step.
+Inside, we peel off our wet coats and hang them near the heater.
+As I wrap my hands around a warm mug of cocoa, I watch snow still falling outside the window.
+The memory of flying down the hill stays bright in my mind, even as my cheeks slowly lose their chill.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            finally, head, boots, squeak, crunch, peel, heater, mug, cocoa, memory, flying, lose, chill
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 12: The New Bike -->
+    <section id="story-12" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 12 – The New Bike</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: learning a skill</span>
+          <span class="tag">Setting: sidewalk</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-12">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: first try.</p>
+          <div class="story-text">
+I see my new bike.
+It is red.
+Dad holds the seat.
+I push the pedals.
+The bike goes!
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            see, new, bike, it, red, holds, seat, push, pedals, goes
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: some wobbles.</p>
+          <div class="story-text">
+I climb onto my new red bike on the sidewalk.
+Dad keeps one hand on the back so I do not fall.
+The wheels wobble as I pedal, but I keep trying.
+Each time I go a little farther before I stop.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            climb, onto, sidewalk, keeps, wheels, wobble, pedal, trying, farther
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: first ride alone.</p>
+          <div class="story-text">
+At first I am afraid to ride without Dad’s hand on the seat.
+He counts “one, two, three” and then lets go for just a moment.
+I feel scared, but the bike keeps rolling and my feet keep pedaling.
+When I reach the tree at the end of the block, I realize I did it by myself.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            afraid, without, moment, scared, rolling, feet, end, block, realize
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: practice and mistakes.</p>
+          <div class="story-text">
+Learning to ride my bike means I tip over sometimes.
+My knees get small scrapes, and my eyes fill with tears, but I stand up again.
+Dad reminds me that every rider wobbles before they glide.
+With each try, my turns get smoother and my legs feel strong.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            learning, tip, scrapes, tears, stand, rider, glide, try, smoother, strong
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: feeling of freedom.</p>
+          <div class="story-text">
+When I finally ride my bike all the way around the block, the wind brushes my face and I feel light as a bird.
+The houses slide past, the wheels hum under my feet, and my fear has turned into joy.
+I remember how many times I wanted to quit, and I am glad I kept trying instead.
+Now, whenever I see my red bike, I also see proof that I can learn hard things if I do not give up.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            finally, around, brushes, slide, hum, fear, quit, proof, hard, give up
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 13: At the Farm -->
+    <section id="story-13" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 13 – At the Farm</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: animals</span>
+          <span class="tag">Setting: farm</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-13">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: naming animals.</p>
+          <div class="story-text">
+I go to a farm.
+I see a cow.
+I see a pig.
+I see a hen.
+I see a big red barn.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            go, farm, see, cow, pig, hen, big, red, barn
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: simple sounds.</p>
+          <div class="story-text">
+The cow says “moo,” and the pig says “oink.”
+The hens cluck and peck at the ground.
+I stand by the fence and watch them eat.
+The farmer waves and lets me pat the gentle cow.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            says, moo, oink, hens, cluck, peck, ground, fence, farmer, waves, gentle
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: jobs on the farm.</p>
+          <div class="story-text">
+The farmer shows me how to feed the chickens and fill their water tray.
+We collect warm eggs from the nests and carry them in a basket.
+Later, we toss hay to the cows and listen to them chew.
+I learn that taking care of animals is busy work every single day.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            shows, feed, chickens, fill, tray, collect, nests, basket, toss, hay, chew, taking care, single
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: describing the farm.</p>
+          <div class="story-text">
+The farm smells like hay, mud, and fresh grass all mixed together.
+Tractors rest near the barn, and tall rows of corn sway in the wind.
+Chickens scratch for seeds while cats nap in the sun.
+Everywhere I look, something is growing, clucking, or buzzing.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            smells, fresh, tractors, rest, rows, corn, sway, scratch, seeds, nap, everywhere, growing, clucking, buzzing
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: connecting food to farm.</p>
+          <div class="story-text">
+Before I visited the farm, eggs and milk just came from the store, and I did not think much about them.
+Now I know hens lay the eggs we eat for breakfast, and cows give the milk we pour on our cereal.
+The farmer works early in the morning and late at night to feed, clean, and protect the animals.
+When I drink a glass of milk at home, I remember the farm and feel thankful for all that quiet, careful work.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            visited, breakfast, cereal, early, late, protect, remember, thankful, careful
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 14: The Lost Tooth -->
+    <section id="story-14" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 14 – The Lost Tooth</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: growing up</span>
+          <span class="tag">Setting: home and school</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-14">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: wiggly tooth.</p>
+          <div class="story-text">
+My tooth is loose.
+I wiggle it.
+I bite a red apple.
+My tooth comes out!
+I see a small gap.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            tooth, loose, wiggle, bite, apple, comes, out, see, small, gap
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: telling others.</p>
+          <div class="story-text">
+All day at school, I push my loose tooth with my tongue.
+At snack time I crunch into an apple, and the tooth falls into my hand.
+My friends shout, “Let us see!”
+The teacher gives me a little envelope to keep the tooth safe.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            day, school, push, tongue, snack, crunch, falls, hand, shout, envelope, safe
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: mixed feelings.</p>
+          <div class="story-text">
+When I look in the mirror, the empty space in my smile seems strange.
+I feel proud because losing a tooth means I am growing, but I also feel a little nervous about the new tooth coming in.
+Mom says my grown-up teeth will be strong and bright.
+I touch the gap with my tongue again and practice my new smile.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            mirror, empty, space, strange, proud, losing, growing, nervous, grown-up, strong, bright, practice
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: night-time tradition.</p>
+          <div class="story-text">
+That night I slip the tiny tooth into a small box and place it under my pillow.
+I wonder if I will hear any sounds in the dark room.
+The pillow feels lumpy, but I keep it there anyway.
+Soon I drift off to sleep, dreaming about shiny coins and new teeth.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            slip, tiny, box, place, pillow, wonder, sounds, dark, lumpy, anyway, drift, dreaming, coins
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: connecting to growing up.</p>
+          <div class="story-text">
+In the morning, the box under my pillow holds a small coin instead of my tooth.
+I smile at the trade and realize that my body is quietly changing all the time.
+New teeth, taller legs, and stronger hands all mean I am growing older.
+Losing a tooth felt scary at first, but now it feels like a little step toward being big.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            morning, holds, coin, trade, realize, quietly, changing, taller, stronger, older, step
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 15: The Tall Tree -->
+    <section id="story-15" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 15 – The Tall Tree</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: nature</span>
+          <span class="tag">Setting: yard / park</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-15">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: very simple tree.</p>
+          <div class="story-text">
+I see a tree.
+It is tall.
+Birds sit on it.
+The tree gives shade.
+I sit under the tree.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            see, tree, it, tall, birds, sit, on, gives, shade, under
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: more details.</p>
+          <div class="story-text">
+The tall tree in our yard has a thick trunk and many branches.
+Green leaves rustle when the wind blows.
+I lean against the trunk and feel the rough bark on my back.
+This is my favorite place to rest and read.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            yard, thick, trunk, branches, green, leaves, rustle, blows, lean, rough, bark, rest, read
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: animals in the tree.</p>
+          <div class="story-text">
+Birds build nests high in the tree and sing in the morning.
+Squirrels race up the trunk and leap from branch to branch.
+Sometimes a cat tries to climb but stops halfway and meows for help.
+The tree is like a busy house for many small animals.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            build, nests, high, sing, morning, squirrels, race, leap, halfway, meows, busy, animals
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: seasons and change.</p>
+          <div class="story-text">
+In spring, tiny green buds appear all over the tree.
+In summer, the leaves grow thick and make deep shade.
+In autumn, the leaves turn gold and orange, then drift down to the ground.
+In winter, the branches look bare, but I know the tree is just resting.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            spring, buds, appear, summer, autumn, gold, orange, drift, bare, resting
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: connection to time.</p>
+          <div class="story-text">
+Grandpa tells me that our tall tree was already standing when he was a child.
+It has watched many years of rain, snow, sun, and wind.
+When I grow taller, the tree will still be here, reaching high into the sky.
+Thinking about the strong tree makes me feel steady and brave, like I can keep growing too.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            grandpa, already, standing, watched, years, reaching, steady, brave, growing
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 16: Beach Day -->
+    <section id="story-16" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 16 – Beach Day</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: trip</span>
+          <span class="tag">Setting: beach</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-16">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: sand and sea.</p>
+          <div class="story-text">
+We go to the beach.
+The sand is warm.
+The sea is blue.
+I dig a big hole.
+Waves splash my feet.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            go, beach, sand, warm, sea, blue, dig, big, hole, waves, splash, feet
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: playing in sand.</p>
+          <div class="story-text">
+I fill my bucket with sand and turn it over to make a tall sandcastle.
+Shells become windows, and a feather is the flag.
+My toes sink into the wet sand near the water.
+Each wave comes close and then slides away again.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            fill, bucket, sandcastle, shells, windows, feather, flag, toes, sink, wet, slides
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: noticing the ocean.</p>
+          <div class="story-text">
+Seagulls cry overhead as they circle above the water.
+The salty air tickles my nose and lips.
+I hold Dad’s hand as we walk into the cool waves.
+Foam wraps around my ankles, and tiny fish dart past my legs.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            seagulls, cry, overhead, circle, salty, tickles, lips, foam, wraps, ankles, dart
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: tide and time.</p>
+          <div class="story-text">
+As the tide comes in, the water climbs higher on the sand.
+Our sandcastle slowly melts away, even though we try to fix the walls.
+Mom says the sea is always moving, pushing and pulling the shore.
+We watch the waves erase our footprints and draw new lines in the sand.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            tide, comes, climbs, melts, walls, always, moving, pushing, pulling, shore, erase, footprints
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: remembering the day.</p>
+          <div class="story-text">
+On the drive home from the beach, sand still clings to my toes and my hair smells like salt and wind.
+I feel sleepy from running, digging, and jumping over waves.
+When I close my eyes, I can still hear the crash and hiss of water on the shore.
+I hope we come back soon, because the beach feels like a wide, bright playground made of water and sky.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            drive, clings, smells, running, digging, jumping, crash, hiss, water, wide, bright, playground
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 17: The Big Game -->
+    <section id="story-17" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 17 – The Big Game</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: teamwork</span>
+          <span class="tag">Setting: field</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-17">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple game.</p>
+          <div class="story-text">
+We go to the field.
+We have a ball.
+I kick the ball.
+My friend runs.
+We both smile.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            go, field, have, ball, kick, friend, runs, both, smile
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: simple team idea.</p>
+          <div class="story-text">
+Our team wears red shirts, and the other team wears blue.
+We line up on the field with the ball in the middle.
+When the whistle blows, we all run.
+I pass the ball to my friend, and she kicks it toward the goal.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            team, wears, other, line up, middle, whistle, blows, pass, toward, goal
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: winning and losing.</p>
+          <div class="story-text">
+During the big game, sometimes we score and sometimes we miss.
+When the other team gets a goal, my stomach feels tight.
+Coach reminds us to keep trying and work together.
+By the end, we are tired but proud of how hard we played.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            during, score, miss, other, tight, coach, reminds, together, proud, played
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: focus on teamwork, not score.</p>
+          <div class="story-text">
+At half-time, the score is close and some kids look worried.
+Coach kneels in front of us and says that being a good team means passing, sharing, and cheering for each other.
+When the game starts again, we talk more and help our friends.
+Even when we make mistakes, we clap and keep going.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            half-time, close, worried, kneels, front, good, passing, sharing,
+            cheering, starts, mistakes, clap
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: lesson from the game.</p>
+          <div class="story-text">
+When the final whistle blows, the scoreboard says we did not win, but I still feel strong inside.
+I remember the times we passed the ball quickly and moved like one big shape across the field.
+We helped each other up when we fell and shouted kind words from the sideline.
+I realize that the best part of the big game was learning how much better we play when we work together.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            final, scoreboard, win, quickly, moved, shape, shouted, sideline, realize, better, together
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 18: The Little Robot -->
+    <section id="story-18" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 18 – The Little Robot</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: curiosity</span>
+          <span class="tag">Setting: home / workshop</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-18">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple robot.</p>
+          <div class="story-text">
+I make a robot.
+It has a box body.
+It has can arms.
+It has light eyes.
+It can walk a bit.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            make, robot, has, box, body, can, arms, light, eyes, walk, bit
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: building with help.</p>
+          <div class="story-text">
+Dad and I use a small kit to build a little robot.
+We screw on the arms and snap in the wheels.
+When we put in the batteries, the robot’s eyes light up.
+It rolls across the floor in a straight line.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            use, kit, build, screw, snap, wheels, batteries, rolls, floor, straight
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: giving simple commands.</p>
+          <div class="story-text">
+We press buttons on the little remote to tell the robot what to do.
+One button makes it move forward, and another makes it turn.
+I laugh when it bumps into the wall and says a tiny “beep.”
+Soon I can guide it around the table without hitting anything.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            press, buttons, remote, forward, turn, laugh, bumps, wall, guide, around, without, hitting
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: asking how things work.</p>
+          <div class="story-text">
+I ask Dad how the robot knows which way to go.
+He shows me the tiny wires and explains that the batteries give it power.
+Signals travel through the wires like messages, telling the wheels to turn.
+The more I learn, the more I want to build new things.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            ask, knows, wires, explains, power, signals, travel, messages, wheels, learn
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: curiosity and creativity.</p>
+          <div class="story-text">
+Playing with the little robot makes me curious about all the machines around me.
+I wonder how doors open by themselves at the store and how lights turn on with a tiny click.
+Dad says that questions are like keys that open new ideas.
+As I fall asleep, I imagine building robots that can help people, and I feel excited about learning more.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            playing, curious, machines, themselves, questions, keys, open, imagine, help, excited, learning
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 19: The New Friend -->
+    <section id="story-19" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 19 – The New Friend</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: friendship</span>
+          <span class="tag">Setting: school</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-19">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple welcome.</p>
+          <div class="story-text">
+I see a new kid.
+He is at the door.
+He looks at the floor.
+I say, “Come sit.”
+He sits by me.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            see, new, kid, at, door, looks, floor, say, come, sit, by, me
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: sharing toys.</p>
+          <div class="story-text">
+The new boy stands by the wall while we build with blocks.
+He holds his backpack strap and does not talk.
+I wave and ask, “Do you want to play?”
+When I slide some blocks toward him, he smiles and joins our game.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            boy, stands, wall, build, blocks, holds, backpack, strap, wave, ask, want, slide, toward, joins
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: learning about each other.</p>
+          <div class="story-text">
+At lunch, I sit next to the new boy and ask his name.
+He tells me where he used to live and what games he likes.
+We discover that we both enjoy drawing and soccer.
+By the end of lunch, we are already planning what to play at recess.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            lunch, next, used, live, games, discover, both, enjoy, drawing, soccer, planning, recess
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: understanding feelings.</p>
+          <div class="story-text">
+The new boy says he felt nervous on his first morning, because he did not know anyone.
+I remember how I felt on my own first day and nod.
+We talk about the things that make school feel friendly, like smiles, kind words, and someone saving you a seat.
+I decide I want to help other new kids feel welcome too.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            nervous, first, morning, anyone, own, nod, friendly, saving, decide, welcome
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: long-term friendship.</p>
+          <div class="story-text">
+Weeks later, the new boy does not feel new anymore.
+He knows the classroom routines, the playground games, and where to find everything.
+Sometimes I forget that we only met recently, because it feels like we have been friends for a long time.
+I am glad I said “Come sit” on that first day, because one small choice gave me a very good friend.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            weeks, anymore, routines, recently, feels, glad, choice, gave, friend
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY 20: Camping Night -->
+    <section id="story-20" class="story-section">
+      <div class="story-header">
+        <h2 class="story-title">Story 20 – Camping Night</h2>
+        <div class="story-tags">
+          <span class="tag">Theme: adventure</span>
+          <span class="tag">Setting: campsite</span>
+        </div>
+      </div>
+
+      <div class="level-picker" data-story-levels="story-20">
+        <button class="level-button active" data-level="1">Level 1</button>
+        <button class="level-button" data-level="2">Level 2</button>
+        <button class="level-button" data-level="3">Level 3</button>
+        <button class="level-button" data-level="4">Level 4</button>
+        <button class="level-button" data-level="5">Level 5</button>
+      </div>
+
+      <div class="card">
+        <div class="level-panel active" data-level-panel="1">
+          <p class="difficulty-note">Level 1: simple camp scene.</p>
+          <div class="story-text">
+We sit in a tent.
+It is dark.
+We have a light.
+We hear a bug.
+We go to sleep.
+          </div>
+          <div class="word-box">
+            <strong>Words in this level:</strong><br />
+            sit, tent, dark, have, light, hear, bug, go, sleep
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="2">
+          <p class="difficulty-note">Level 2: fire and marshmallows.</p>
+          <div class="story-text">
+We build a small campfire and sit on logs around it.
+Dad holds long sticks with marshmallows on the ends.
+They turn golden and soft over the flames.
+We blow on them and taste the warm, sticky treat.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            build, campfire, logs, around, sticks, marshmallows, ends, golden, flames, sticky, treat
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="3">
+          <p class="difficulty-note">Level 3: night sounds.</p>
+          <div class="story-text">
+When we climb into the tent, the forest feels very quiet and very loud at the same time.
+Crickets chirp, leaves rustle, and a distant owl calls.
+I squeeze my flashlight and whisper, “What was that?”
+Mom smiles and says the sounds belong to the night animals who live here.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            climb, forest, crickets, chirp, distant, owl, flashlight, whisper, belong, animals
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="4">
+          <p class="difficulty-note">Level 4: looking at stars.</p>
+          <div class="story-text">
+We unzip the tent and peek out at the dark sky.
+More stars shine above us than I have ever seen at home.
+Dad points out shapes and calls them constellations.
+I try to remember their names as I crawl back into my sleeping bag.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            unzip, peek, sky, shine, above, ever, points, constellations, remember, crawl, sleeping bag
+          </div>
+        </div>
+
+        <div class="level-panel" data-level-panel="5">
+          <p class="difficulty-note">Level 5: feeling brave outdoors.</p>
+          <div class="story-text">
+As I lie in the tent listening to the forest, I feel a little afraid and a little proud at the same time.
+The world outside my house is bigger and darker than my room, but it is also full of new sounds and smells.
+Mom’s steady breathing beside me and the soft rustle of the tent walls help me relax.
+I fall asleep knowing that camping night has made the world feel wider and myself feel braver.
+          </div>
+          <div class="word-box">
+            <strong>New words:</strong><br />
+            lie, listening, afraid, proud, bigger, darker, steady, breathing, relax, wider, braver
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Story switching via dropdown + arrow buttons
+    const storySections = document.querySelectorAll(".story-section");
+    const storySelect = document.getElementById("storySelect");
+    const prevStoryBtn = document.getElementById("prevStory");
+    const nextStoryBtn = document.getElementById("nextStory");
+
+    const storyOrder = [
+      "story-1","story-2","story-3","story-4","story-5",
+      "story-6","story-7","story-8","story-9","story-10",
+      "story-11","story-12","story-13","story-14","story-15",
+      "story-16","story-17","story-18","story-19","story-20"
+    ];
+
+    function showStory(id) {
+      storySections.forEach(sec => {
+        sec.classList.toggle("active", sec.id === id);
+      });
+      if (storySelect.value !== id) {
+        storySelect.value = id;
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    storySelect.addEventListener("change", () => {
+      showStory(storySelect.value);
+    });
+
+    function changeStory(delta) {
+      const currentId = storySelect.value;
+      const idx = storyOrder.indexOf(currentId);
+      if (idx === -1) return;
+      let nextIdx = idx + delta;
+      if (nextIdx < 0) nextIdx = storyOrder.length - 1;
+      if (nextIdx >= storyOrder.length) nextIdx = 0;
+      showStory(storyOrder[nextIdx]);
+    }
+
+    prevStoryBtn.addEventListener("click", () => changeStory(-1));
+    nextStoryBtn.addEventListener("click", () => changeStory(1));
+
+    // Level switching within each story
+    document.querySelectorAll("[data-story-levels]").forEach(levelPicker => {
+      const storyId = levelPicker.getAttribute("data-story-levels");
+
+      levelPicker.querySelectorAll(".level-button").forEach(button => {
+        button.addEventListener("click", () => {
+          const level = button.getAttribute("data-level");
+
+          // update button active state
+          levelPicker.querySelectorAll(".level-button").forEach(b => {
+            b.classList.toggle("active", b === button);
+          });
+
+          // update panels for this story
+          const storySection = document.getElementById(storyId);
+          storySection.querySelectorAll(".level-panel").forEach(panel => {
+            panel.classList.toggle(
+              "active",
+              panel.getAttribute("data-level-panel") === level
+            );
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
